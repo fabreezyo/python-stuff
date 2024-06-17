@@ -40,22 +40,22 @@ for find, replace in RENAME_ITEMS.items():
     transactions.Category = np.where(transactions.Name == find, replace, transactions.Category)
 
 transactions.Category = (np
-                         .where(
-	                             (transactions.Category == 'Cash & Checks') & (transactions.Amount >= 400.),
-	                             'Bills & Utilities',
-	                             transactions.Category,
-	                             )    
+			 .where(
+				     (transactions.Category == 'Cash & Checks') & (transactions.Amount >= 400.),
+				     'Bills & Utilities',
+				     transactions.Category,
+				     )    
                          )
 
 filter_date_and_accounts: bool = (
-									(transactions.Date.between('2024-02-01','2024-04-30')) &
-									(transactions['Description'] != 'Card Payment from Secured Account')
-									)
+					(transactions.Date.between('2024-02-01','2024-04-30')) &
+					(transactions['Description'] != 'Card Payment from Secured Account')
+					)
 
 filter_transactions: bool = (
-								~transactions['Category'].isin(['Internal Transfers', 'Savings Transfer']) &
-								~transactions.Name.str.contains('Transfer|Pending',case=False, regex=True) &
-								~transactions['Account Name'].isin(['Rainy Day', 'Chime Savings'])
+				~transactions['Category'].isin(['Internal Transfers', 'Savings Transfer']) &
+				~transactions.Name.str.contains('Transfer|Pending',case=False, regex=True) &
+				~transactions['Account Name'].isin(['Rainy Day', 'Chime Savings'])
                             	)
                          
 last_quarter: pd.DataFrame = (transactions
@@ -98,11 +98,11 @@ average_monthly_income = (last_quarter
                           )
 
 weekly_transactions_df = (last_quarter
-						  .pipe(show_dates)
-						  .groupby(pd.Grouper(key='Date', freq='W-WED'))
-						  .apply(lambda x: (x
-											.drop(columns=['Date'])
-											.reset_index(drop=True)
-										   )
-								)
-						 )
+			  .pipe(show_dates)
+			  .groupby(pd.Grouper(key='Date', freq='W-WED'))
+			  .apply(lambda x: (x
+								.drop(columns=['Date'])
+								.reset_index(drop=True)
+							   )
+					)
+			 )
