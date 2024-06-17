@@ -40,17 +40,17 @@ for find, replace in RENAME_ITEMS.items():
     transactions.Category = np.where(transactions.Name == find, replace, transactions.Category)
 
 transactions.Category = (np
-			 .where(
-				     (transactions.Category == 'Cash & Checks') & (transactions.Amount >= 400.),
-				     'Bills & Utilities',
-				     transactions.Category,
-				     )    
+						 .where(
+							     (transactions.Category == 'Cash & Checks') & (transactions.Amount >= 400.),
+							     'Bills & Utilities',
+							     transactions.Category,
+							     )    
                          )
 
 filter_date_and_accounts: bool = (
-					(transactions.Date.between('2024-02-01','2024-04-30')) &
-					(transactions['Description'] != 'Card Payment from Secured Account')
-					)
+									(transactions.Date.between('2024-02-01','2024-04-30')) &
+									(transactions['Description'] != 'Card Payment from Secured Account')
+								)
 
 filter_transactions: bool = (
 				~transactions['Category'].isin(['Internal Transfers', 'Savings Transfer']) &
